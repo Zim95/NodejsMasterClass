@@ -16,6 +16,9 @@ var StringDecoder = require("string_decoder").StringDecoder;
 var config = require('./config');
 //for importing https certificates
 var fs = require("fs");
+//importing handlers after movinfg them to another file
+var handlers = require('./lib/handlers');
+
 
 //Instantiating the HTTP server
 var httpServer = http.createServer(function(req,res){
@@ -30,9 +33,10 @@ httpServer.listen(config.httpPort,function(){
 
 //Instantiating the HTTPS server
 var httpsServerOptions = {
-  'key':fs.readFileSync(),
-  'cert':fs.readFileSync()
+  'key':fs.readFileSync('./https/key.pem'),
+  'cert':fs.readFileSync('./https/cert.pem')
 };
+
 var httpsServer = https.createServer(httpsServerOptions,function(req,res){
   //just pass its req and res to the unified server
   unifiedServer(req,res);
@@ -40,7 +44,7 @@ var httpsServer = https.createServer(httpsServerOptions,function(req,res){
 
 //start the HTTPS server and have it listen to port specified as per config.js
 httpsServer.listen(config.httpsPort,function(){
-  console.log("Server is listening at port " + config.httpPort+" in "+config.envName+" mode" );
+  console.log("Server is listening at port " + config.httpsPort+" in "+config.envName+" mode" );
 });
 
 
@@ -127,20 +131,9 @@ var unifiedServer = function(req,res){
   });
 
 };
-//Define handlers
-var handlers = {};
-//sample handler
-handlers.sample = function(data,callback){
-  //Callback an http status code and a payload object
-  callback(406,{"name":"sample handler"});
-};
-//notFound handler
-handlers.notFound = function(data,callback){
-  //callback an http status code and a payload object
-  callback(404);
-};
+
 //Define a request router
 var router = {
   '':handlers.sample,
-  'sample': handlers.sample
+  'ping': handlers.ping
 };

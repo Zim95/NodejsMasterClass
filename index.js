@@ -13,11 +13,13 @@ var url = require("url");
 //for decoding streams
 var StringDecoder = require("string_decoder").StringDecoder;
 //import configurations
-var config = require('./config');
+var config = require('./lib/config');
 //for importing https certificates
 var fs = require("fs");
 //importing handlers after movinfg them to another file
 var handlers = require('./lib/handlers');
+//importing helper modules
+var helpers = require('./lib/helpers');
 
 
 //Instantiating the HTTP server
@@ -94,7 +96,7 @@ var unifiedServer = function(req,res){
       'queryStringObject': queryStringObject,
       'method':method,
       'headers':headers,
-      'payload':buffer
+      'payload':helpers.parseJsonToObject(buffer)
     };
 
     //now chosen handler holds handler.sample or handler.notFound or etc....
@@ -135,5 +137,6 @@ var unifiedServer = function(req,res){
 //Define a request router
 var router = {
   '':handlers.sample,
-  'ping': handlers.ping
+  'ping': handlers.ping,
+  'users':handlers.users
 };

@@ -11,7 +11,7 @@ Udemy node js master class. - Leslie Lewis
 7) Production ready.
 
 #Contains:-
-1) A RESTFUL api with CRUD functionalities built with node from scratch.
+1) A RESTFUL API with CRUD functionalities along with JWT Authentication built with node from scratch.
 2) A web GUI.
 3) A CLI (Command Line Interface) built with node from scratch.
 
